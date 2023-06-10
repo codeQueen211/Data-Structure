@@ -156,7 +156,20 @@ StatusType RecordsCompany::putOnTop(int r_id1, int r_id2){ //NOT DONE
      if ((r_id1 < 0) || (r_id2 <0)) {
         return StatusType::INVALID_INPUT;
     }
-    return StatusType::SUCCESS;
+    //cheching if records exist
+    if (r_id1>=size ||r_id2>=size)
+    {
+        return StatusType::DOESNT_EXISTS;
+    }
+    //check if r_id1 and r_id2 are already on top of each-other
+    if (unionFind->find(r_id1)==unionFind->find(r_id2))
+    {
+        return StatusType::FAILURE;
+    }else{
+        //put r_id1 on top of r_id2
+        unionFind->unite(r_id1,r_id2);
+        //update the hight of all records in r_id1 to hight1=hight1+hight2
+    }
 }
 
 StatusType RecordsCompany::getPlace(int r_id, int *column, int *hight){ //NOT DONE
@@ -167,6 +180,12 @@ StatusType RecordsCompany::getPlace(int r_id, int *column, int *hight){ //NOT DO
      if ((column==nullptr) && (hight==nullptr)) {
         return StatusType::INVALID_INPUT;
     }
+     //check if the record exists
+    if (r_id>=size)
+    {
+        return StatusType::DOESNT_EXISTS;
+    }
+    //return the hgiht and the column of the r_id
     return StatusType::SUCCESS;
 }
 
