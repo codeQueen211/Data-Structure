@@ -23,17 +23,40 @@ RecordsCompany:: ~RecordsCompany(){ //DONE
 
 StatusType RecordsCompany::newMonth(int *records_stocks, int number_of_records){ //NOT DONE
     //TODO
-     if (number_of_records<0) {
+     // Checking for invalid input
+    if (number_of_records < 0) {
         return StatusType::INVALID_INPUT;
     }
+
+    // Freeing existing records in the array
+    if (records != nullptr) {
+        free(records);
+    }
+
+    // Resetting expenses to 0 for all customers in the tree
+    tree.updateExpenses(0);
+
+    // Updating the size of the records array
+    size = number_of_records;
+
+    // Allocating memory for the records array
+    records = (Records*)malloc(number_of_records * sizeof(Records));
+    if (records == nullptr) {
+        return StatusType::ALLOCATION_ERROR;
+    }
+
+    // Initializing each record with the stock amount
+    for (int i = 0; i < number_of_records; i++) {
+        records[i] = Records(i, records_stocks[i], 0);
+    }
+
+    return StatusType::SUCCESS;
     //if there are records in the array===> free
     //inorder over the tree and set expenses==0
     // set size to num/-of/-records
     //malloc records= malloc(number_of_records*sizeof(Records))
     //for(in records)===> malloc or a constructor of record
     //records[i].r_amount=recordsStock[i]
-
-    return StatusType::SUCCESS;
 }
 
 StatusType RecordsCompany::addCostumer(int c_id, int phone){ //DONE
@@ -169,9 +192,13 @@ StatusType RecordsCompany::putOnTop(int r_id1, int r_id2){ //NOT DONE
         //put r_id1 on top of r_id2
         unionFind->unite(r_id1,r_id2);
         //update the hight of all records in r_id1 to hight1=hight1+hight2
+       int hight1= records[r_id1].get_r_amount();
+       int hight2= records[r_id2].get_r_amount();
+       records[r_id1].set_r_amount(hight1+hight2);
     }
 }
-
+ //the column is the index of the record in records array
+ //the hight is the number of copies for that record
 StatusType RecordsCompany::getPlace(int r_id, int *column, int *hight){ //NOT DONE
     //TODO
      if ((r_id < 0)) {
@@ -186,6 +213,14 @@ StatusType RecordsCompany::getPlace(int r_id, int *column, int *hight){ //NOT DO
         return StatusType::DOESNT_EXISTS;
     }
     //return the hgiht and the column of the r_id
+    int index = findIndex(records, size, r_id);
+    if (index == -1) {
+        return StatusType::DOESNT_EXISTS;
+    }
+    // Set the column and height values
+    *column = index;
+    *hight = records[index].get_r_amount();
+   
     return StatusType::SUCCESS;
 }
 

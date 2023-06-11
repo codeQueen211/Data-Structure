@@ -31,6 +31,14 @@ class RecordsCompany {
     Output_t<double> getExpenses(int c_id);
     StatusType putOnTop(int r_id1, int r_id2);
     StatusType getPlace(int r_id, int *column, int *hight);
+    int findIndex(Records *records, int size, int r_id){
+    for (int column = 0; column < size; column++) {
+        if (records[column].get_r_id() == r_id) {
+            return column;  // Return the index if the element is found
+        }
+    }
+    return -1;  // Return -1 if the element is not found
+}
 };
 
 #endif
