@@ -33,7 +33,7 @@ StatusType RecordsCompany::newMonth(int *records_stocks, int number_of_records){
         free(records);
     }
 
-    // Resetting expenses to 0 for all customers in the tree
+    // Resetting expenses to 0 for all customers in the tree using inorder traversal
     tree.updateExpenses(0);
 
     // Updating the size of the records array
@@ -46,8 +46,8 @@ StatusType RecordsCompany::newMonth(int *records_stocks, int number_of_records){
     }
 
     // Initializing each record with the stock amount
-    for (int i = 0; i < number_of_records; i++) {
-        records[i] = Records(i, records_stocks[i], 0);
+    for (int r_id = 0; r_id < number_of_records; r_id++) {
+        records[r_id] = Records(r_id, records_stocks[r_id], 0);
     }
 
     return StatusType::SUCCESS;
@@ -105,7 +105,7 @@ StatusType RecordsCompany::makeMember(int c_id){ //DONE
         return StatusType::ALREADY_EXISTS; 
     }
     // add costumer to member tree and fix c_memebr to true
-    bool insertSuccess = tree.insert(c_id,0);//????? idk if it's ok to add the mem with 0 expeness
+    bool insertSuccess = tree.insert(c_id,0);
     bool memberSuccess=hash.setMember(c_id);
     if (insertSuccess && memberSuccess) {
         return StatusType::SUCCESS;
